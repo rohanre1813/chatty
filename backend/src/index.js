@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://chatty-5mp8.vercel.app/",
+    origin: "https://chatty-5mp8.vercel.app",
     credentials: true,
   })
 );
