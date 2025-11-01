@@ -16,10 +16,12 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://chatty-5mp8.vercel.app", // your frontend URL
+    origin: ["https://chatty-5mp8.vercel.app", "http://localhost:5173"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
+
 
 console.log("Mongo URI:", process.env.MONGO_URI);
 console.log("PORT:", PORT);
