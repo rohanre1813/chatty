@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 dotenv.config();
-
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -11,57 +10,33 @@ import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import { app, server } from "./lib/socket.js";
 
-// -------------------------------
-// Configuration
-// -------------------------------
 const PORT = process.env.PORT || 10000;
-const __dirname = path.resolve();
 
-// -------------------------------
-// Middleware
-// -------------------------------
 app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: [
-      "https://chatty-5mp8.vercel.app", // ✅ frontend on Vercel
-      "http://localhost:5173",          // ✅ for local development
-    ],
+    origin: "https://chatty-5mp8.vercel.app", // your frontend URL
     credentials: true,
   })
 );
 
-// -------------------------------
-// Debug Info (optional)
 console.log("Mongo URI:", process.env.MONGO_URI);
 console.log("PORT:", PORT);
 console.log("NODE_ENV:", process.env.NODE_ENV);
 
-// -------------------------------
-// Routes
-// -------------------------------
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-// -------------------------------
-// Serve Frontend in Production
-// -------------------------------
-if (process.env.NODE_ENV === "production") {
-  const frontendPath = path.join(__dirname, "../frontend/dist");
-  app.use(express.static(frontendPath));
+// ❌ Remove or comment out any frontend serving code
+// app.use(express.static(path.join(__dirname, "../frontend/dist")));
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+// });
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(frontendPath, "index.html"));
-  });
-}
-
-// -------------------------------
-// Start Server after DB Connection
-// -------------------------------
 connectDB().then(() => {
   server.listen(PORT, () => {
-    console.log(`✅ Server is running on PORT: ${PORT}`);
+    console.log("✅ Server is running on PORT:", PORT);
   });
 });
 
